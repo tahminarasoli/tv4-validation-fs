@@ -1,9 +1,4 @@
-fetch('/api')
-  .then(res => res.json())
-  .then(data => {
-    console.log(data)
-    document.getElementById('root')
-      .innerHTML = data.message;
-  })
-  .catch(err => console.error(err));
+import { loginFunction } from './handler/login.js';
+const loginButton = document.getElementById('login').addEventListener('click', loginFunction);
+console.log(loginButton)
 
