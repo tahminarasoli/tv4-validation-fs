@@ -29,8 +29,8 @@ async function getExistingUser() {
         const usersInfo = await res.json();
 
         return usersInfo;
-    } catch (error) {
-        error.message; // tremote control
+    } catch (error) { 
+        error.message; 
     }
 }
 
