@@ -7,10 +7,10 @@ const tv4 = require('tv4');
 const config = require('../config');
 
 const SCHEMA = path.join(__dirname, '/..', config.DATA_DIR, '/_-schema.json');
-const DATA_PATH = path.join(__dirname, '/..', config.DATA_DIR, '/newdata.json');
-
+//const DATA_PATH = path.join(__dirname, '/..', config.DATA_DIR, '/newdata.json');
+console.log(SCHEMA);
 const controllers = {
-  hello: (req, res) => {
+ hello: (req, res) => {
     res.json({ message: 'hello!' });
   },
   getUsers: (req, res) => {
@@ -27,25 +27,29 @@ const controllers = {
 
   userData: async (req, res) => {
     const newUser = req.body;
+    console.log(newUser)
     try {
-      const readData = await fs.readFile('../data/newdata.json');
-      const parseUser = JSON.parse(readData);
-      console.log(parseUser);
-      const validate = tv4.validate(newUser, SCHEMA);
-      if (!validate) {
-        const error = tv4.error;
-        console.error(error);
+      const readData = await fs.readFile('../data/newdata.json', (err, data) => {
+        const parseUser = JSON.parse(data);
+        console.log(parseUser);
+        const validate = tv4.validate(newUser, '../data/_-schema.json');
+        console.log('validate', validate);
+        if (!validate) {
+          const error = tv4.error;
+          console.error(error);
 
-        res.status(400).json({
-          error: {
-            message: error.message,
-            dataPath: error.dataPath,
-          },
-        });
-        return;
-      }
+          res.status(400).json({
+            error: {
+              message: error.message,
+              dataPath: error.dataPath,
+            },
+          });
+          return;
+        }
 
-      res.json(parseUser);
+        res.json(parseUser);
+      });
+
     } catch (err) {
       console.log(err);
 
@@ -57,17 +61,28 @@ const controllers = {
   },
   signUp: async (req, res) => {
     const newUser = req.body;
-
+    console.log(newUser)
     try {
-      const readData = await readFile(DATA_PATH, 'utf-8');
-      const parseUser = JSON.parse(readData);
+      const readData = await fs.readFile('./data/newdata.json', (err, data) => {
+        const parseUser = JSON.parse(data);
+        console.log("before",parseUser) 
+        console.log("user",parseUser.users) 
+        parseUser.users.push(newUser);
+        
+        console.log("after", parseUser)
+        const newUserData = JSON.stringify(parseUser, null, 4);
+         fs.writeFile('./data/newdata.json', newUserData, (err) => {
+          if (err) {
+            res.status(500).send(err);
+            return;
+          }
+        });
 
-      parseUser.users.push(newUser);
-
-      const newUserData = JSON.stringify(parseUser, null, ' ');
-      await writeFile(DATA_PATH, newUserData);
-      console.log(newUser);
-      res.json(parseRead);
+         
+        console.log(newUser);
+        res.json(newUser);
+      });
+     
     } catch (err) {
       console.log(err);
 

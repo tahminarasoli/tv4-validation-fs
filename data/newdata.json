@@ -1,17 +1,15 @@
 {
     "users": [
-      {
-        "name": "Divya",
-        "email":"divyasree@gmail.com",
-        "password": "qwerty32"
+        {
+            "name": "Divya",
+            "email": "divyasree@gmail.com",
+            "password": "Qwerty@32"
+        },
+        {
+            "name": "burak",
+            "email": "burak@gmail.com",
+            "password": "qwErty@32"
+        }
         
-        
-      },
-      {
-        "name": "burak",
-        "email":"burak@gmail.com",
-        "password": "qwerty32"
-      }
-      
     ]
 }
