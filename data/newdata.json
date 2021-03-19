@@ -1,0 +1,17 @@
+{
+    "users": [
+      {
+        "name": "Divya",
+        "email":"divyasree@gmail.com",
+        "password": "qwerty32"
+        
+        
+      },
+      {
+        "name": "burak",
+        "email":"burak@gmail.com",
+        "password": "qwerty32"
+      }
+      
+    ]
+}
