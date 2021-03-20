@@ -1,14 +1,19 @@
 'use strict'
 
 const { json } = require('body-parser');
+const util = require('util');
 const fs = require('fs');
 const path = require('path');
 const tv4 = require('tv4');
 const config = require('../config');
 
-const SCHEMA = path.join(__dirname, '/..', config.DATA_DIR, '/_-schema.json');
+const SCHEMA_PATH = path.join(__dirname, '/..', config.DATA_DIR, '/_-schema.json');
 //const DATA_PATH = path.join(__dirname, '/..', config.DATA_DIR, '/newdata.json');
-console.log(SCHEMA);
+
+
+const readFile = util.promisify(fs.readFile);
+
+
 const controllers = {
  hello: (req, res) => {
     res.json({ message: 'hello!' });
@@ -63,14 +68,32 @@ const controllers = {
     const newUser = req.body;
     console.log(newUser)
     try {
+      const schemaString = await readFile(SCHEMA_PATH, 'utf-8');
+      const userSchema = JSON.parse(schemaString);
+      console.log(userSchema)
       const readData = await fs.readFile('./data/newdata.json', (err, data) => {
         const parseUser = JSON.parse(data);
-        console.log("before",parseUser) 
-        console.log("user",parseUser.users) 
+        
+       
+        const isValid = tv4.validateMultiple(newUser, userSchema );
+        
+       
+
+        if (!isValid.valid) {
+                    
+          const error = isValid.errors;
+          // console.error(error)
+          const err_obj = {};
+          error.forEach(err => err_obj[err.dataPath.slice(1,err.dataPath.length)]=err.message)
+          // console.log(err_obj)
+          res.status(400).json(err_obj)
+          return
+        }
+
         parseUser.users.push(newUser);
         
-        console.log("after", parseUser)
         const newUserData = JSON.stringify(parseUser, null, 4);
+
          fs.writeFile('./data/newdata.json', newUserData, (err) => {
           if (err) {
             res.status(500).send(err);
@@ -78,8 +101,6 @@ const controllers = {
           }
         });
 
-         
-        console.log(newUser);
         res.json(newUser);
       });
      
