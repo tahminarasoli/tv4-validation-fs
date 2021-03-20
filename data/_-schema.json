@@ -1,32 +1,18 @@
 {
-  "title": "Sign in",
-  "description": "Validation of user information",
   "type": "object",
   "properties": {
-      "users": {
-          "type": "array",
-          "items": {
-              "type":"object",
-                "properties":{
-                "email": {
-                  "type": "string",
-                  "format": "email"
-              },
-              "name": {
-                  "type": "string",
-                  "minLength": 5
-              },
-              "password": {
-                  "type": "string",
-                  "pattern": "^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$"
-              }
-                }
-          },
-          "required": [
-              "email",
-              "name",
-              "password"
-          ]
-      }
-  }
+    "email": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+(\\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\.[a-zA-Z]{2,15})$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 5
+    },
+    "password": {
+      "type": "string",
+      "pattern": "^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+    }
+  },
+  "required": ["email", "name", "password"]
 }
